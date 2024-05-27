@@ -39,7 +39,7 @@
                             {% endif %}
                         </a>
                         <figcaption class="info-wrap">
-                            <a href="#" class="title">{{ product.title }}</a>
+                            <a href="{% url 'product:detail' product.pk %}" class="title">{{ product.title }}</a>
                             <div class="price mt-1">${{ product.price }}</div> <!-- price-wrap.// -->
                         </figcaption>
                     </div>
