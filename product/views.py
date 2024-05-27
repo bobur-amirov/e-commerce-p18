@@ -27,7 +27,16 @@ def store(request):
         # is_main=True
     ).values('image')[:1]
 
-    products = Product.objects.annotate(
+    price_gte = request.GET.get('price__gte')
+    price_lte = request.GET.get('price__lte')
+    if price_lte and price_gte:
+        products = Product.objects.filter(price__gte=price_gte, price__lte=price_lte)
+    elif price_gte and not price_lte:
+        products = Product.objects.filter(price__gte=price_gte)
+    else:
+        products = Product.objects.all()
+
+    products = products.annotate(
         main_image=Subquery(main_image_subquery)
     ).values('pk', 'title', 'price', 'main_image')
 
@@ -42,7 +51,7 @@ def store(request):
     context = {'products': products}
     return render(request, 'product/store.html', context)
 
-def get_category(requets, pk):
+def get_category(request, pk):
     category = get_object_or_404(Category, pk=pk)
     main_image_subquery = Images.objects.filter(
         product=OuterRef('pk'),
@@ -53,8 +62,15 @@ def get_category(requets, pk):
         main_image=Subquery(main_image_subquery)
     ).values('pk', 'title', 'price', 'main_image')
 
+    products = Paginator(products, 3)
+    page = request.GET.get('page')
+    try:
+        products = products.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        products = products.page(1)
+
     context = {'products': products, "category": category}
-    return render(requets, 'product/store.html', context)
+    return render(request, 'product/store.html', context)
 
 
 def product_detail(request, pk):
