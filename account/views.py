@@ -19,7 +19,7 @@ def login_view(request):
             return render(request, 'account/login.html')
         login(request, user)
         messages.info(request, 'Login successfull!')
-        return redirect('home')
+        return redirect('product:home')
     return render(request, 'account/login.html')
 
 
