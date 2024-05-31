@@ -10,7 +10,7 @@ class User(AbstractUser):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.username
+        return self.username + " " + str(self.pk)
 
     @property
     def is_admin(self):
