@@ -78,7 +78,6 @@ def product_detail(request, pk):
     if request.method == "POST":
         text = request.POST.get('text')
         star = request.POST.get('star')
-        print(star)
         if request.user.is_authenticated:
             comment = Comment.objects.create(
                 product=product,
@@ -88,6 +87,5 @@ def product_detail(request, pk):
             )
             return redirect(reverse('product:detail', kwargs={"pk": product.pk}))
     avg_rating = product.comment_set.filter(star__gt=0).aggregate(Avg('star'))['star__avg']
-    print(avg_rating, '--')
     context = {"product": product, "star_avg": avg_rating}
     return render(request, 'product/product_detail.html', context)

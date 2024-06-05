@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_filters',
     'django.contrib.humanize',
     'rest_framework_simplejwt',
+    'rest_framework',
+    'debug_toolbar',
 
     # custom apps
     'base.apps.BaseConfig',
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
 ROOT_URLCONF = 'Ecommerce.urls'
@@ -143,5 +147,13 @@ AUTH_USER_MODEL = 'account.User'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

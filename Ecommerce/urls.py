@@ -25,12 +25,15 @@ urlpatterns = [
     path('', include('product.urls')),
     path('account/', include('account.urls')),
     path('order/', include('order.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 api_urls = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/v0/account/', include('account.api.v0.urls'))
+    path('api/v0/account/', include('account.api.v0.urls')),
+    path('api/v0/product/', include('product.api.v0.urls')),
+    path('api/v0/order/', include('order.api.v0.urls')),
 ]
 
 urlpatterns += api_urls
