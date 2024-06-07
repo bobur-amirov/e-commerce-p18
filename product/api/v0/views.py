@@ -1,3 +1,5 @@
+from django.core.cache import cache
+from django.db.models import Prefetch, OuterRef, Subquery
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
@@ -6,7 +8,7 @@ from .serializers import (CategorySerializer,
                           ProductDetailSerializer,
                           CommentCreateSerializer
                           )
-from product.models import Category, Product, Comment
+from product.models import Category, Product, Comment, Images
 
 
 class CategoryListAPIView(generics.ListAPIView):
@@ -24,6 +26,24 @@ class CategoryListAPIView(generics.ListAPIView):
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        products = cache.get('product_list')
+        if products is None:
+            # products = Product.objects.prefetch_related(
+            #     Prefetch('images_set', queryset=Images.objects.order_by('id'))
+            # )
+            main_image_subquery = Images.objects.filter(
+                product=OuterRef('pk'),
+                # is_main=True
+            ).values('image')[:1]
+
+            products = Product.objects.annotate(
+                main_image=Subquery(main_image_subquery)
+            )
+            cache.set('product_list', products)
+        # cache.delete('product_list')
+        return products
 
 
 class ProductByCategoryListAPIView(generics.ListAPIView):

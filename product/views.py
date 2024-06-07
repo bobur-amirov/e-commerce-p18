@@ -40,7 +40,7 @@ def store(request):
         main_image=Subquery(main_image_subquery)
     ).values('pk', 'title', 'price', 'main_image')
 
-    products = Paginator(products, 3)
+    products = Paginator(products, 9)
     page = request.GET.get('page')
     try:
         products = products.page(page)
@@ -62,7 +62,7 @@ def get_category(request, pk):
         main_image=Subquery(main_image_subquery)
     ).values('pk', 'title', 'price', 'main_image')
 
-    products = Paginator(products, 3)
+    products = Paginator(products, 9)
     page = request.GET.get('page')
     try:
         products = products.page(page)

@@ -30,9 +30,9 @@ class Product(TimeStampModel):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        self.validate_detail()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.validate_detail()
+    #     super().save(*args, **kwargs)
 
     def validate_detail(self):
         category_type = self.category.type
