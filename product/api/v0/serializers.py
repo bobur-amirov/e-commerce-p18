@@ -1,12 +1,15 @@
 from rest_framework import serializers
+from parler_rest.serializers import TranslatableModelSerializer, TranslatedFieldsField
+
 
 from product.models import Product, Category, Comment, Images
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(TranslatableModelSerializer):
+    translations = TranslatedFieldsField(shared_model=Category)
     class Meta:
         model = Category
-        fields = ['pk', 'name', 'order']
+        fields = ['pk', 'translations', 'order']
 
     # Bu to_representation method bizga qo'shimcha field qo'shish imkonini beradi
     # shunda model ning fieldlaridan tashqari yana qo'shimcha field bulib client tamonga yuboriladi

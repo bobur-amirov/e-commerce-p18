@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_celery_beat',
     'django_celery_results',
+    'parler',
+    'parler_rest',
 
     # custom apps
     'base.apps.BaseConfig',
@@ -118,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uz'
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -169,7 +171,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_TIMEZONE = 'Asia/Tashkent' #(you can write your own timezone)
+CELERY_TIMEZONE = 'Asia/Tashkent'  # (you can write your own timezone)
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -177,3 +179,24 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'your_email@gmail.com'
 EMAIL_HOST_PASSWORD = ''
+
+from django.utils.translation import gettext_lazy as _
+
+
+LANGUAGES = (
+    ('uz', _("Uzbek")),
+    ('en', _("English")),
+    ('ru', _('Russian')),
+)
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'uz', },
+        {'code': 'en', },
+        {'code': 'ru', },
+    ),
+    'default': {
+        'fallback': 'uz',  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+        'hide_untranslated': False,  # the default; let .active_translations() return fallbacks too.
+    }
+}

@@ -2,6 +2,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.translation import gettext_lazy as _
+
+from parler.models import TranslatableModel, TranslatedFields
 
 from .choices import CategotyType
 
@@ -10,22 +13,26 @@ from base.models import TimeStampModel
 User = get_user_model()
 
 
-class Category(TimeStampModel):
-    name = models.CharField(max_length=100, unique=True)
+class Category(TranslatableModel, TimeStampModel):
+    translations = TranslatedFields(
+        name=models.CharField(max_length=100, unique=True)
+    )
     order = models.IntegerField(default=0)
     type = models.IntegerField(choices=CategotyType, default=CategotyType.NON_TYPE)
 
     def __str__(self):
-        return self.name
+        return self.safe_translation_getter('name', any_language=True)
 
 
-class Product(TimeStampModel):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
+class Product(TranslatableModel, TimeStampModel):
+    translations = TranslatedFields(
+        title=models.CharField(max_length=100),
+        description=models.TextField(),
+        detail=models.JSONField(default=dict)
+    )
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
     price = models.DecimalField(max_digits=20, decimal_places=2)
     quantity = models.IntegerField()
-    detail = models.JSONField(default=dict)
 
     def __str__(self):
         return self.title
